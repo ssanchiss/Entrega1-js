@@ -65,14 +65,14 @@ const cargarPorKilo = () => {
     let kgCargar = parseFloat(prompt('Ingrese cuántos kilos de novillo quiere cargar:'));
     let horasAnotadas = kgCargar / kgPorHora;
     let pesosCobrados = kgCargar * valorKg;
-    alert ('Cargaste '+ kgCargar.toFixed(2)+' kg de novillo.\n Equivalentes:\nHoras trabajadas: '+ horasAnotadas.toFixed(2)+'\n Dinero: $'+ pesosCobrados.toFixed(2));
+    alert ('Cargaste '+ kgCargar.toFixed(2)+' kg de novillo.\n Equivalentes:\nHoras trabajadas: '+ horasAnotadas.toFixed(2)+'\n Pesos: $'+ pesosCobrados.toFixed(2));
 };
 
 const cargarPorPesos = () => {
-    let pesosCargados = parseFloat(prompt('Ingrese cuánto dinero desea cargar:'));
+    let pesosCargados = parseFloat(prompt('Ingrese cuántos pesos desea cargar:'));
     let kgAnotar = pesosCargados / valorKg;
     let horasAnotadas = (pesosCargados / valorKg) / kgPorHora;
-    alert('cargaste '+ kgAnotar.toFixed(2)+' kg de novillo. \nEquivalentes: \nDinero:'+ peososCargados.toFixed(2)+'Horas Trabajadas: '+ horasAnotadas.toFixed(2));
+    alert('cargaste '+ kgAnotar.toFixed(2)+' kg de novillo. \nEquivalentes: \nPesos:'+ pesosCargados.toFixed(2)+'Horas Trabajadas: '+ horasAnotadas.toFixed(2));
 };
 
 const cargarPorHoras = () => {
@@ -100,7 +100,7 @@ const sacarPorHoras = () => {
     let horasSacar = parseFloat(prompt('Ingrese cuántas horas de trabajo desea sacar:'));
     let kgEquivalentes = horasSacar * kgPorHora;
     let pesosEquivalentes = horasSacar * valorKg * kgPorHora;
-    alert('Ha sacado ' + horasSacar.toFixed(2) + ' horas de trabajo.\nEquivalentes:\nKilos de novillo: ' + kgEquivalentes.toFixed(2) + '\nDinero: $' + pesosEquivalentes.toFixed(2));
+    alert('Ha sacado ' + horasSacar.toFixed(2) + ' horas de trabajo.\nEquivalentes:\nKilos de novillo: ' + kgEquivalentes.toFixed(2) + '\nPesos: $' + pesosEquivalentes.toFixed(2));
 };
 
 ingresarValorKg();
