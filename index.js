@@ -1,119 +1,97 @@
 
 let valorKg = 0;
-let kgPorHora = 0;
-let continuar = true;
+let kgPorHora = 0; 
+let kgTotales = 0; 
+let movimientos = []; 
 
-const ingresarValorKg = () => {
-    valorKg = parseFloat(prompt('Ingrese el valor actual del kilo de novillo:'));
-};
 
-const ingresarKgPorHora = () => {
-    kgPorHora = parseFloat(prompt('Ingrese cuántos kilos de novillo cobra por hora:'));
-};
+const userNameSpan = document.getElementById('usuario');
+const kgTotalesSpan = document.getElementById('kg-totales');
+const movimientosDiv = document.getElementById('movimientos');
+const operacionesDiv = document.getElementById('operaciones');
+const formularioOperacionDiv = document.getElementById('formulario-operacion');
+const valorInputDiv = document.getElementById('valorIn');
 
-const ejecutarPrograma = () => {
-    while (continuar) {
-        const operacion = prompt('¿Qué operación desea realizar?\n1 - Cargar\n2 - Sacar\n3 - Salir');
-        
-        switch (operacion) {
-            case '1':
-                cargar();
-                break;
-            case '2':
-                sacar();
-                break;
-            case '3':
-                continuar = false;
-                alert('saluditos crodiales!');
-                break;
-            default:
-                alert('Opción no válida. Debes colocar 1, 2 o 3');
+document.getElementById('guardar-nombre').addEventListener('click', () => {
+    const nombre = document.getElementById('nombre').value;
+    if (nombre !== "") {
+        userNameSpan.textContent = nombre;
+        document.getElementById('usuario').style.display = 'none';
+        valorInputDiv.style.display = 'block';
+    }
+});
+
+document.getElementById('guardar-valores').addEventListener('click', () => {
+    valorKg = parseFloat(document.getElementById('valorKg').value);
+    kgPorHora = parseFloat(document.getElementById('kgPorHora').value);
+    if (valorKg > 0 && kgPorHora > 0) {
+        valorInputDiv.style.display = 'none';
+        operacionesDiv.style.display = 'block';
+    }
+});
+
+document.getElementById('botonIngreso').addEventListener('click', () => {
+    mostrarFormulario('ingreso');
+});
+
+document.getElementById('botonEgreso').addEventListener('click', () => {
+    mostrarFormulario('egreso');
+});
+
+function mostrarFormulario(tipo) {
+    formularioOperacionDiv.style.display = 'block';
+    formularioOperacionDiv.innerHTML = `
+        <p>Seleccione la opción deseada:</p>
+        <p>1 - Por horas trabajadas</p>
+        <p>2 - Por kilos</p>
+        <p>3 - Por pesos</p>
+        <input type="text" id="opcion" placeholder="Ingrese 1, 2 o 3">
+        <input type="text" id="valor" placeholder="Ingrese el valor">
+        <button id="realizar-operacion">Realizar Operación</button>
+    `;
+
+    document.getElementById('realizar-operacion').addEventListener('click', () => {
+        const operacion = document.getElementById('opcion').value;
+        const valor = parseFloat(document.getElementById('valor').value);
+
+        if ((operacion === '1' || operacion === '2' || operacion === '3') && valor > 0) {
+            realizarOperacion(tipo, operacion, valor);
+            formularioOperacionDiv.style.display = 'none';
+
         }
-    }
-};
+    });
+}
 
-const cargar = () => {
-    const opcionCargar = prompt('¿Qué desea cargar?\n1 - Por kilo de novillo\n2 - Por pesos\n3 - Por horas trabajadas');
-    
-    switch (opcionCargar) {
-        case '1':
-            cargarPorKilo();
+function realizarOperacion(tipo, operacion, valor) {
+    let kg;
+    switch (operacion) {
+        case '1': 
+            kg = valor * kgPorHora;
             break;
-        case '2':
-            cargarPorPesos();
+        case '2': 
+            kg = valor;
             break;
-        case '3':
-            cargarPorHoras();
-            break;
-        default:
-            alert('Opción no válida. Por favor, ingrese 1, 2 o 3.');
-    }
-};
-
-const sacar = () => {
-    const opcionSacar = prompt('¿Qué desea sacar?\n1 - Kilos de novillo\n2 - Por Pesos\n3 - Horas de trabajo');
-    
-    switch (opcionSacar) {
-        case '1':
-            sacarPorKilos();
-            break;
-        case '2':
-            sacarPorPesos();
-            break;
-        case '3':
-            sacarPorHoras();
+        case '3': 
+            kg = valor / valorKg;
             break;
         default:
-            alert('Opción no válida. Ingrese 1, 2 o 3.');
+            return;
     }
-};
 
-const cargarPorKilo = () => {
-    let kgCargar = parseFloat(prompt('Ingrese cuántos kilos de novillo quiere cargar:'));
-    let horasAnotadas = kgCargar / kgPorHora;
-    let pesosCobrados = kgCargar * valorKg;
-    alert('Cargaste ' + kgCargar.toFixed(2) + ' kg de novillo.\n Equivalentes:\nHoras trabajadas: ' + horasAnotadas.toFixed(2) + '\n Pesos: $' + pesosCobrados.toFixed(2));
-};
-
-const cargarPorPesos = () => {
-    let pesosCargados = parseFloat(prompt('Ingrese cuántos pesos desea cargar:'));
-    let kgAnotar = pesosCargados / valorKg;
-    let horasAnotadas = (pesosCargados / valorKg) / kgPorHora;
-    alert('Cargaste ' + kgAnotar.toFixed(2) + ' kg de novillo. \nEquivalentes: \nPesos: ' + pesosCargados.toFixed(2) + '\nHoras Trabajadas: ' + horasAnotadas.toFixed(2));
-};
-
-const cargarPorHoras = () => {
-    let horasTrabajadas = parseFloat(prompt('Ingrese cuántas horas trabajó:'));
-    if (horasTrabajadas>8){
-        alert('denuncialos por explotación')
+    if (tipo === 'ingreso') {
+        kgTotales += kg;
+        movimientos.push({ tipo: 'Ingreso', kg });
+    } else {
+        kgTotales -= kg;
+        movimientos.push({ tipo: 'Egreso', kg });
     }
-    let kgAnotar = horasTrabajadas * kgPorHora;
-    let pesosCobrados = horasTrabajadas * kgPorHora * valorKg;
-    alert('Cargaste ' + kgAnotar.toFixed(2) + ' kg de novillo.\nEquivalentes:\nHoras trabajadas: ' + horasTrabajadas.toFixed(2) + '\nPesos: $' + pesosCobrados.toFixed(2));
-};
 
-const sacarPorKilos = () => {
-    let kgSacar = parseFloat(prompt('Ingrese cuántos kilos de novillo desea sacar:'));
-    let pesosEquivalentes = kgSacar * valorKg;
-    let horasEquivalentes = kgSacar / kgPorHora;
-    alert('Sacaste ' + kgSacar.toFixed(2) + ' kg de novillo.\nEquivalentes:\nPesos: $' + pesosEquivalentes.toFixed(2) + '\nHoras trabajadas: ' + horasEquivalentes.toFixed(2));
-};
-
-const sacarPorPesos = () => {
-    let pesosSacar = parseFloat(prompt('Ingrese cuántos pesos desea sacar:'));
-    let kgEquivalentes = pesosSacar / valorKg;
-    let horasEquivalentes = kgEquivalentes / kgPorHora;
-    alert('Ha sacado $' + pesosSacar.toFixed(2) + '\nEquivalentes:\nKilos de novillo: ' + kgEquivalentes.toFixed(2) + '\nHoras trabajadas: ' + horasEquivalentes.toFixed(2));
-};
-
-const sacarPorHoras = () => {
-    let horasSacar = parseFloat(prompt('Ingrese cuántas horas de trabajo desea sacar:'));
-    let kgEquivalentes = horasSacar * kgPorHora;
-    let pesosEquivalentes = horasSacar * valorKg * kgPorHora;
-    alert('Ha sacado ' + horasSacar.toFixed(2) + ' horas de trabajo.\nEquivalentes:\nKilos de novillo: ' + kgEquivalentes.toFixed(2) + '\nPesos: $' + pesosEquivalentes.toFixed(2));
-};
-
-ingresarValorKg();
-ingresarKgPorHora();
-
-ejecutarPrograma();
+    actualizarMovimientos();
+}
+function actualizarMovimientos() {
+    kgTotalesSpan.textContent = kgTotales;
+    movimientosDiv.innerHTML = "";
+    movimientos.forEach(movimiento => {
+        movimientosDiv.innerHTML += `<div>${movimiento.tipo}: ${movimiento.kg} kg</div>`;
+    });
+}
